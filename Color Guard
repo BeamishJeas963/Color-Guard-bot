@@ -1,0 +1,35 @@
+  'https://api.kik.com/v1/config',
+    auth=('<ehscolorguard>', '<ae306494-06c4-4817-aff3-b7e7cc06e245>')
+)requests.post(
+    'https://api.kik.com/v1/config',
+    auth=('<ehscolorguard>', '<ae306494-06c4-4817-aff3-b7e7cc06e245>'),
+    headers={
+        'Content-Type': 'application/json'
+    },
+    data=json.dumps({
+        "webhook": "https://https://mail.google.com/mail/u/1/#inbox/incoming",
+        "features": {
+            "manuallySendReadReceipts": False,
+            "receiveReadReceipts": False,
+            "receiveDeliveryReceipts": False,
+            "receiveIsTyping": False
+        }
+    })
+)
+requests.post(
+    'https://api.kik.com/v1/message',
+    auth=('<ehscolorguard>', '<ae306494-06c4-4817-aff3-b7e7cc06e245>'),
+    headers={
+        'Content-Type': 'application/json'
+    },
+    data=json.dumps({
+        'messages': [
+            {
+                'body': 'bar', 
+                'to': 'BeamishJeans963', 
+                'type': 'Hello', 
+                'chatId': 'b3be3bc15dbe59931666c06290abd944aaa769bb2ecaaf859bfb65678880afab'
+            }
+        ]
+    })
+)
