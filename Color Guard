@@ -1,36 +1,32 @@
-  'https://api.kik.com/v1/config',
-    auth=('<ehscolorguard>', '<ae306494-06c4-4817-aff3-b7e7cc06e245>')
-)requests.post(
-    'https://api.kik.com/v1/config',
-    auth=('<ehscolorguard>', '<ae306494-06c4-4817-aff3-b7e7cc06e245>'),
-    headers={
-        'Content-Type': 'application/json'
-    },
-    data=json.dumps({
-        "webhook": "https://https://mail.google.com/mail/u/1/#inbox/incoming",
-        "features": {
-            "manuallySendReadReceipts": False,
-            "receiveReadReceipts": False,
-            "receiveDeliveryReceipts": False,
-            "receiveIsTyping": False
-        }
-    })
-)
-requests.post(
-    'https://api.kik.com/v1/message',
-    auth=('<ehscolorguard>', '<ae306494-06c4-4817-aff3-b7e7cc06e245>'),
-    headers={
-        'Content-Type': 'application/json'
-    },
-    data=json.dumps({
-        'messages': [
-            {
-                'body': 'bar', 
-                'to': 'BeamishJeans963', 
-                'type': 'Hello', 
-                'chatId': 'b3be3bc15dbe59931666c06290abd944aaa769bb2ecaaf859bfb65678880afab'
-            }
-        ]
-    })
-)
-base64_encode(ehscolorguard:ae306494-06c4-4817-aff3-b7e7cc06e245)
+from flask import Flask, request, Response
+
+from kik import KikApi, Configuration
+from kik.messages import messages_from_json, TextMessage
+
+app = Flask(__name__)
+kik = KikApi(ehscolorguard,775fef1d-c7ab-41d7-a426-96082618e7d1)
+
+kik.set_configuration(Configuration(webhook=google.com))
+
+@app.route('/incoming', methods=['POST'])
+def incoming():
+    if not kik.verify_signature(request.headers.get('X-Kik-Signature'), request.get_data()):
+        return Response(status=403)
+
+    messages = messages_from_json(request.json['messages'])
+
+    for message in messages:
+        if isinstance(message, TextMessage):
+            kik.send_messages([
+                TextMessage(
+                    to=message.from_user,
+                    chat_id=message.chat_id,
+                    body=message.body
+                )
+            ])
+
+    return Response(status=200)
+
+
+if __name__ == "__main__":
+    app.run(port=8080, debug=True)
